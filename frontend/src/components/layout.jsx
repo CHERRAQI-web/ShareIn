@@ -302,7 +302,7 @@ const Layout = () => {
           
           <div className="flex items-center space-x-2 sm:space-x-4">
             <Link to='/form_client'>
-             <button className="hidden sm:flex items-center justify-center rounded-xl bg-cyan-600 px-4 py-2 text-sm font-bold text-white shadow-xl shadow-cyan-500/40 transition-transform duration-300 hover:bg-cyan-400 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-cyan-300">
+             <button className="hidden sm:flex items-center justify-center rounded-xl bg-cyan-600 px-4 py-2 text-sm font-bold text-black shadow-xl shadow-cyan-500/40 transition-transform duration-300 hover:bg-cyan-400 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-cyan-300">
               <UserPlus className="w-5 h-5 mr-2" />
               <span className="hidden sm:inline">Ajouter Client</span>
             </button>

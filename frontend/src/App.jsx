@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard.jsx";
 import Layout from "./components/layout.jsx";
 import { MantineProvider } from "@mantine/core";
-import Users from "./pages/users.jsx";
 import Clients from "./pages/client.jsx";
 import Login from './pages/login.jsx';
 import Register from './pages/register.jsx';
@@ -24,7 +23,6 @@ function App() {
 
             <Route path="/" element={<Layout />}>
               <Route index element={<Dashboard />} />
-              <Route path="/Users" element={<Users />} />
               <Route path="/Clients" element={<Clients />} />  
               <Route path="/EditClient/:id" element={<EditClient />}/>
               <Route path="/Form_client" element={<Form_client />}/>

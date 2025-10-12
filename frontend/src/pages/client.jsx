@@ -305,7 +305,7 @@ const exportClientToWord = async (clientId) => {
                     <Trash2 className="w-5 h-5" />
                   </button>
                   <button onClick={() => exportClientToWord(license.client_id)} className="text-blue-500 hover:text-blue-400 p-2 rounded-full hover:bg-gray-700 transition-colors ml-2" title="Exporter la fiche complète en Word">
-                    <FileText className="w-5 h-5" />
+                    <Download className="w-5 h-5" />
                   </button>
                 </td>
               </tr>
@@ -343,7 +343,7 @@ const exportClientToWord = async (clientId) => {
                   <Trash2 className="w-5 h-5" />
                 </button>
                 <button onClick={() => exportClientToWord(license.client_id)} className="text-blue-500 hover:text-blue-400 p-2 rounded-full hover:bg-gray-700 transition-colors" title="Exporter la fiche complète en Word">
-                  <FileText className="w-5 h-5" />
+                  <Download className="w-5 h-5" />
                 </button>
               </div>
             </div>

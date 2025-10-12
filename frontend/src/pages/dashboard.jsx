@@ -181,9 +181,9 @@ const Dashboard = () => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
       <div className="bg-gray-900 p-4 sm:p-6 rounded-xl shadow-xl lg:col-span-1">
         <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
-          Activité Hebdomadaire
+           Nombre de Clients au Fil du Temps
         </h2>
-        <ResponsiveContainer width="100%" height={350}>
+        <ResponsiveContainer width="100%" height={320}>
           <BarChart data={barChartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
@@ -197,9 +197,9 @@ const Dashboard = () => {
 
       <div className="bg-gray-900 p-4 sm:p-6 rounded-xl shadow-xl lg:col-span-1">
         <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
-          Tendances de Traitement
+Nombre de Documents Par Date
         </h2>
-        <ResponsiveContainer width="100%" height={350}>
+        <ResponsiveContainer width="100%" height={320}>
           <AreaChart
             data={areaData}
             margin={{

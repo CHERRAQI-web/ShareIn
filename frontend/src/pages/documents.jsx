@@ -567,7 +567,7 @@ const ClientsListDarkTheme = () => {
         {/* Section pour les boutons */}
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 sm:w-1/3">
           <Link to="/form_client" className="w-full">
-            <button className="w-full inline-flex items-center justify-center rounded-xl bg-cyan-600 px-4 sm:px-6 py-3 text-sm font-bold text-white shadow-xl shadow-cyan-600/40 transition-transform duration-300 hover:bg-cyan-400 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-cyan-400">
+            <button className="w-full inline-flex items-center justify-center rounded-xl bg-cyan-600 px-4 sm:px-6 py-3 text-sm font-bold text-black shadow-xl shadow-cyan-600/40 transition-transform duration-300 hover:bg-cyan-400 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-cyan-400">
               <UserPlus className="w-5 h-5 mr-2" />
               Ajouter Client
             </button>
@@ -576,7 +576,7 @@ const ClientsListDarkTheme = () => {
           <button
             onClick={exportToCSV}
             disabled={isLoading}
-            className="w-full inline-flex items-center justify-center rounded-xl bg-blue-800 px-4 sm:px-6 py-3 text-sm font-bold text-white shadow-xl shadow-blue-600/40 transition-transform duration-300 hover:bg-blue-500 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full inline-flex items-center justify-center rounded-xl bg-blue-800 px-4 sm:px-6 py-3 text-sm font-bold text-black shadow-xl shadow-blue-600/40 transition-transform duration-300 hover:bg-blue-500 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
