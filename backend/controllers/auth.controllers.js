@@ -1,9 +1,6 @@
 import users from "./user.controllers.js";
 import { generateToken } from "../utils/generateToken.js";
 import { comparePassword, hashPassword } from "../utils/hashPassword.js";
-import bcrypt from "bcryptjs";
-import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import axios from "axios";
 dotenv.config();
