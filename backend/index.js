@@ -41,8 +41,8 @@ app.use(
   })
 );
 
-// Gestion explicite des requêtes OPTIONS
-app.options('*', cors());
+// La ligne suivante a été supprimée car elle cause une erreur
+// app.options('*', cors()); 
 
 app.use(express.json());
 app.use(cookieParser());
