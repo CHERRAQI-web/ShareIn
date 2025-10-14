@@ -50,7 +50,7 @@ const Register = () => {
     try {
       // Envoi de la requête d'inscription
       const response = await axios.post(
-        "http://localhost:8080/api/auth/register",
+        "https://impartial-illumination-production.up.railway.app/api/auth/register",
         { username, email, password, confirmPassword, role: "user" },
         {
           headers: {

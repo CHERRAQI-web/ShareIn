@@ -55,7 +55,7 @@ const Login = () => {
       console.log("Données envoyées:", { email, password }); // Log les données envoyées
 
       const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
+        "https://impartial-illumination-production.up.railway.app/api/auth/login",
         { email, password },
         {
           headers: { "Content-Type": "application/json" },

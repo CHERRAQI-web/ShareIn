@@ -12,7 +12,7 @@ import {
   Search,
 } from "lucide-react";
 
-const API_URL = "http://localhost:8080/api";
+const API_URL = "https://impartial-illumination-production.up.railway.app/api";
 const AI_SERVICE_URL = "http://localhost:5001";
 
 const EditClientWithExtraction = () => {
