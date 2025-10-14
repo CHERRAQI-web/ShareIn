@@ -13,16 +13,29 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://share-in-1adx.vercel.app/' 
+];
 
 app.use(
   cors({
-     origin: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+// -------------------------
 
 // Connexion à MongoDB
 connectDB();
@@ -35,6 +48,4 @@ app.use('/api/clients', clientRoutes);
 app.use('/api/Stats', Satas);
 app.use("/api/auth", authRoutes);
 
-
-// Démarapp.use('/api', studentsRouter);rer le serveur
 export default app;
