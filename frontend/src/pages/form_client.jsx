@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import axios from "axios";
 // Constantes pour les URLs
 const API_URL = "https://sharein-production.up.railway.app/api";
-const AI_SERVICE_URL = "https://honest-connection-production-1b35.up.railway.app/";
+const AI_SERVICE_URL = "https://honest-connection-production-1b35.up.railway.app";
 import TabContent from '../components/tabContent.jsx';
 // import renderFinalSummary from '../components/renderFinalSummary.jsx' // Problème: ce composant n'est pas fourni
 
