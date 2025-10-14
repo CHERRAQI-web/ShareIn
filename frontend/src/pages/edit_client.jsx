@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 const API_URL = "https://sharein-production.up.railway.app/api";
-const AI_SERVICE_URL = "http://localhost:5001";
+const AI_SERVICE_URL = "https://honest-connection-production-1b35.up.railway.app/";
 
 const EditClientWithExtraction = () => {
   const { id } = useParams(); // Récupère l'ID du document depuis l'URL
