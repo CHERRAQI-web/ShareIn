@@ -32,10 +32,10 @@ useEffect(() => {
     const fetchAllData = async () => {
       try {
         // Récupérer les permis et les clients
-        const licensesResponse = await axios.get("https://impartial-illumination-production.up.railway.app/api/driving-licenses");
+        const licensesResponse = await axios.get("https://share-in-pywm.vercel.app/api/driving-licenses");
         
         // Récupérer les cartes grises
-        const vehiclesResponse = await axios.get("https://impartial-illumination-production.up.railway.app/api/vehicule");
+        const vehiclesResponse = await axios.get("https://share-in-pywm.vercel.app/api/vehicule");
         
         // --- DIAGNOSTIC 1 : Affichez la réponse brute de l'API véhicules ---
         console.log("Réponse brute de l'API véhicules:", vehiclesResponse.data);
@@ -230,7 +230,7 @@ const exportClientToWord = async (clientId) => {
   const confirmDelete = async () => {
     try {
       console.log("ID du client à supprimer:", clientToDelete);
-      await axios.delete(`https://impartial-illumination-production.up.railway.app/api/clients/${clientToDelete}`);
+      await axios.delete(`https://share-in-pywm.vercel.app/api/clients/${clientToDelete}`);
       
       setMergedLicenses(prevLicenses => 
         prevLicenses.filter(license => license.client_id !== clientToDelete)

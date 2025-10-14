@@ -37,7 +37,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        const response = await axios("https://impartial-illumination-production.up.railway.app/api/clients");
+        const response = await axios("https://share-in-pywm.vercel.app/api/clients");
         setClient(response.data);
       } catch (error) {
         setMessage("Erreur lors de la récupération des données des clients");
@@ -50,7 +50,7 @@ const Dashboard = () => {
     const fetchPercentage = async () => {
       try {
         const response = await axios(
-          "https://impartial-illumination-production.up.railway.app/api/stats/global-stats"
+          "https://share-in-pywm.vercel.app/api/stats/global-stats"
         );
         setStats(response.data);
       } catch (error) {

@@ -44,7 +44,7 @@ const ClientsListDarkTheme = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get("https://impartial-illumination-production.up.railway.app/api/Stats");
+        const response = await axios.get("https://share-in-pywm.vercel.app/api/Stats");
         console.log("Réponse de l'API Stats :", response.data);
         setStatsData({
           stats: response.data.stats || [],
@@ -62,7 +62,7 @@ const ClientsListDarkTheme = () => {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await axios.get("https://impartial-illumination-production.up.railway.app/api/vehicles");
+        const response = await axios.get("https://share-in-pywm.vercel.app/api/vehicles");
         console.log("Réponse de l'API véhicules :", response.data);
         // Gestion robuste des données des véhicules
         let vehicleData = [];
@@ -86,10 +86,10 @@ const ClientsListDarkTheme = () => {
     const fetchAllData = async () => {
       try {
         // Récupérer les permis et les clients
-        const licensesResponse = await axios.get("https://impartial-illumination-production.up.railway.app/api/driving-licenses");
+        const licensesResponse = await axios.get("https://share-in-pywm.vercel.app/api/driving-licenses");
         
         // Récupérer les cartes grises
-        const vehiclesResponse = await axios.get("https://impartial-illumination-production.up.railway.app/api/vehicule");
+        const vehiclesResponse = await axios.get("https://share-in-pywm.vercel.app/api/vehicule");
         
         // Gestion robuste des données des véhicules
         let vehicleData = [];
