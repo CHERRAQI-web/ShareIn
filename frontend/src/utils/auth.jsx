@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const isAuthenticated = async () => {
   try {
-    const response = await axios.get("https://share-in-pywm.vercel.app/api/auth/me", {
+    const response = await axios.get("https://sharein-production.up.railway.app/api/auth/me", {
       withCredentials: true,
     });
     return response.data;
@@ -12,7 +12,7 @@ export const isAuthenticated = async () => {
 };
 export const logout = async () => {
   try {
-    await axios.post("https://share-in-pywm.vercel.app/api/auth/logout", {}, { withCredentials: true, credentials: "include", });
+    await axios.post("https://sharein-production.up.railway.app/api/auth/logout", {}, { withCredentials: true, credentials: "include", });
   } catch (error) {
     console.error("Erreur lors du logout :", error);
   } finally {

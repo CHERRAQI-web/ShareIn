@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 // Constantes pour les URLs
-const API_URL = "https://share-in-pywm.vercel.app/api";
+const API_URL = "https://sharein-production.up.railway.app/api";
 const AI_SERVICE_URL = "http://localhost:5001";
 import TabContent from '../components/tabContent.jsx';
 // import renderFinalSummary from '../components/renderFinalSummary.jsx' // Problème: ce composant n'est pas fourni

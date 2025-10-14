@@ -44,7 +44,7 @@ const ClientsListDarkTheme = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get("https://share-in-pywm.vercel.app/api/Stats");
+        const response = await axios.get("https://sharein-production.up.railway.app/api/Stats");
         console.log("Réponse de l'API Stats :", response.data);
         setStatsData({
           stats: response.data.stats || [],
@@ -62,7 +62,7 @@ const ClientsListDarkTheme = () => {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await axios.get("https://share-in-pywm.vercel.app/api/vehicles");
+        const response = await axios.get("https://sharein-production.up.railway.app/api/vehicles");
         console.log("Réponse de l'API véhicules :", response.data);
         // Gestion robuste des données des véhicules
         let vehicleData = [];
@@ -86,10 +86,10 @@ const ClientsListDarkTheme = () => {
     const fetchAllData = async () => {
       try {
         // Récupérer les permis et les clients
-        const licensesResponse = await axios.get("https://share-in-pywm.vercel.app/api/driving-licenses");
+        const licensesResponse = await axios.get("https://sharein-production.up.railway.app/api/driving-licenses");
         
         // Récupérer les cartes grises
-        const vehiclesResponse = await axios.get("https://share-in-pywm.vercel.app/api/vehicule");
+        const vehiclesResponse = await axios.get("https://sharein-production.up.railway.app/api/vehicule");
         
         // Gestion robuste des données des véhicules
         let vehicleData = [];
@@ -180,22 +180,7 @@ const ClientsListDarkTheme = () => {
       item.document_type?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredLicenses = Array.isArray(mergedLicenses)
-    ? mergedLicenses.filter((license) => {
-        const client = license.clientInfo;
-        return (
-          client?.first_name
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          client?.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          client?.cin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          license.license_number
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          license.categorie?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      })
-    : [];
+ 
 
   // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
