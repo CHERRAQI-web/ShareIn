@@ -48,11 +48,12 @@ export const login = async (req, res) => {
 
     // Génération du token
     const token = generateToken(user);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000, // 1 heure
-    });
+   res.cookie("token", token, {
+  httpOnly: true,
+  secure: true, 
+  sameSite: 'None', 
+  maxAge: 3600000,
+});
     res
       .status(200)
       .json({ message: "Connexion réussie", user: sanitizeUser(user), token });
@@ -65,11 +66,11 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // même config que login
-      sameSite: "strict",
-      path: "/", // obligatoire si tu veux être sûr
-    });
+  httpOnly: true,
+  secure: true, 
+  sameSite: 'None', 
+  path: "/", 
+});
     res.status(200).json({ message: "Déconnexion réussie" });
   } catch (error) {
     res.status(500).json({ message: error.message });
