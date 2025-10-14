@@ -1,12 +1,23 @@
-FROM node:18-alpine as build
+# Étape 1 : Utiliser une image Node.js officielle
+FROM node:16
+
+# Définir le répertoire de travail dans le conteneur
 WORKDIR /app
+
+# Copier le package.json et package-lock.json
 COPY frontend/package*.json ./
+
+# Installer les dépendances
 RUN npm install
+
+# Copier le reste des fichiers du projet
 COPY frontend/ .
+
+# Construire l'application React
 RUN npm run build
 
-FROM nginx:stable-alpine
-COPY --from=build /app/build /usr/share/nginx/html
-COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Exposer le port
+EXPOSE 3000
+
+# Lancer l'application
+CMD ["npm", "start"]

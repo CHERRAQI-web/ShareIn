@@ -1,27 +1,20 @@
+# Étape 1 : Utiliser une image Node.js officielle
+FROM node:16
 
-FROM node:18-alpine AS builder
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
 
-WORKDIR /usr/src/app
+# Copier le package.json et package-lock.json
+COPY backend/package*.json ./
 
-COPY package*.json ./
+# Installer les dépendances
+RUN npm install
 
-RUN npm ci
+# Copier le reste des fichiers du projet
+COPY backend/ .
 
-COPY . .
-
-FROM node:18-alpine AS production
-
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-WORKDIR /usr/src/app
-
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-
-COPY --from=builder /usr/src/app . .
-
-RUN chown -R appuser:appgroup /usr/src/app
-USER appuser
-
+# Exposer le port
 EXPOSE 3000
 
-CMD [ "node", "index.js" ]
+# Lancer l'application
+CMD ["npm", "start"]
