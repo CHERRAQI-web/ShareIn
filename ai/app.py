@@ -7,6 +7,7 @@ import pytesseract
 from PIL import Image, ImageEnhance, ImageFilter
 import cv2
 import numpy as np
+import os
 
 # --- Configuration Initiale ---
 app = Flask(__name__)
@@ -703,5 +704,5 @@ def extract_info():
         return jsonify({'error': f'Error during processing: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    # Assurez-vous que Tesseract est bien installé et accessible dans votre PATH
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(debug=True, port=port)
