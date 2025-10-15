@@ -407,10 +407,33 @@ def extract_carte_grise_data(text_recto, text_verso):
 
     # --- 4. Type (sur le Verso) ---
     # CORRIGÉ: Simple et efficace.
-    type_match = re.search(r'Type\s*([\w\-]+)', text_verso)
+    
+    # Recherche 1: Le pattern original
+    original_pattern = r'Type\s*([\w\-]+)'
+    type_match = re.search(original_pattern, text_verso)
     if type_match:
-        data['type'] = type_match.group(1).strip()
-        print(f"✅ Type trouvé (Verso): {data['type']}")
+        print(f"✅ Succès avec le pattern original! Type trouvé: '{type_match.group(1)}'")
+    else:
+        print(f"❌ Échec avec le pattern original: '{original_pattern}'")
+
+    # Recherche 2: Un pattern plus robuste (qui accepte les espaces et les minuscules)
+    robust_pattern = r'Type\s*([\w\s\-]+)' # <-- التغيير هنا: أضفنا \s
+    type_match_robust = re.search(robust_pattern, text_verso, re.IGNORECASE) # <-- وأضفنا re.IGNORECASE
+    if type_match_robust:
+        print(f"✅ Succès avec le pattern robuste! Type trouvé: '{type_match_robust.group(1).strip()}'")
+    else:
+        print(f"❌ Échec avec le pattern robuste: '{robust_pattern}'")
+
+    print("==================================================\n")
+
+    # Utiliser le résultat du pattern robuste s'il a fonctionné
+    final_match = type_match or type_match_robust
+    if final_match:
+        data['type'] = final_match.group(1).strip()
+        print(f"✅ Type final: {data['type']}")
+    else:
+        print("❌ Type non trouvé après toutes les tentatives.")
+
 
     # --- 5. Type carburant (sur le Verso) ---
     # CORRIGÉ: Simple et efficace.
