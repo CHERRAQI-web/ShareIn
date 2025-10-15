@@ -309,10 +309,11 @@ def extract_permis_data(text_recto, text_verso, image_recto_bytes=None):
         print("❌ Catégorie non trouvée après toutes les tentatives.")
 
     # 3. Extraction de la date d'émission
-    issue_date_match_recto = re.search(r'Le\s*…\s*(\d{2}[./]\d{2}[./]\d{4})', text_recto)
+    issue_date_match_recto = re.search(r'Le\s*(\d{2}[./]\d{2}[./]\d{4})', text_recto)
     if issue_date_match_recto:
         data['issue_date'] = _format_date(issue_date_match_recto.group(1))
         print(f"✅ Date d'émission trouvée: {data['issue_date']}")
+
 
     # 4. Extraction de la date d'expiration
     expiry_date_match = re.search(r'Fin de validité.*?(\d{2}[./]\d{2}[./]\d{4})', text_verso, re.IGNORECASE | re.DOTALL)
