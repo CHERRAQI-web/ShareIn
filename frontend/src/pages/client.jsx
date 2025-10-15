@@ -6,7 +6,7 @@ import ConfirmationModal from "../components/confirmation.jsx";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 import { saveAs } from "file-saver";
 
-const ClientsListDarkTheme = () => {
+const ClientsList = () => {
   const [message, setMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -230,7 +230,7 @@ const exportClientToWord = async (clientId) => {
   const confirmDelete = async () => {
     try {
       console.log("ID du client à supprimer:", clientToDelete);
-      await axios.delete(`sharein-production.up.railway.app/api/clients/${clientToDelete}`);
+      await axios.delete(`https://sharein-production.up.railway.app/api/clients/${clientToDelete}`);
       
       setMergedLicenses(prevLicenses => 
         prevLicenses.filter(license => license.client_id !== clientToDelete)
@@ -496,4 +496,4 @@ const exportClientToWord = async (clientId) => {
   );
 };
 
-export default ClientsListDarkTheme;
+export default ClientsList;
