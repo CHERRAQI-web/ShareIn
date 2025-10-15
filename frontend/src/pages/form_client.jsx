@@ -855,7 +855,7 @@ const Client = () => {
                 </div>
                 <div className="mb-3 sm:mb-4 sm:col-span-2">
                   <label htmlFor="vin" className="block mb-1 font-bold text-sm sm:text-base text-gray-300">
-                    N° du chassis (VIN)
+                    N° du chassis 
                   </label>
                   <input
                     type="text"

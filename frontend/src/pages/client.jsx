@@ -177,11 +177,8 @@ const exportClientToWord = async (clientId) => {
       // Création des paragraphes pour les véhicules
       let vehicleParagraphs = [];
       if (Array.isArray(clientVehicles) && clientVehicles.length > 0) {
-        vehicleParagraphs = clientVehicles.flatMap((vehicle, index) => [
-          new Paragraph({
-            children: [new TextRun({ text: `Véhicule ${index + 1}`, bold: true, size: 22, color: "FF9900" })],
-            spacing: { before: 400, after: 200 },
-          }),
+        vehicleParagraphs = clientVehicles.flatMap((vehicle) => [
+         
           new Paragraph({ children: [new TextRun({ text: "Numéro d'immatriculation: ", bold: true, size: 22 }), new TextRun({ text: vehicle.numero_immatriculation || "N/A", size: 22 })], spacing: { after: 150 } }),
           new Paragraph({ children: [new TextRun({ text: "Marque: ", bold: true, size: 22 }), new TextRun({ text: vehicle.marque || "N/A", size: 22 })], spacing: { after: 150 } }),
           new Paragraph({ children: [new TextRun({ text: "Type: ", bold: true, size: 22 }), new TextRun({ text: vehicle.type || "N/A", size: 22 })], spacing: { after: 150 } }),
