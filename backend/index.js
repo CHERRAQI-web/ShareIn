@@ -21,12 +21,25 @@ const allowedOrigins = [
   // Ajoutez d'autres origines si nécessaire
 ];
 
-app.use(cors({
-    origin: '*', 
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
-// -
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Permet les requêtes sans origin (mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log(`Origine non autorisée par CORS: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Set-Cookie']
+  })
+);
 
 // La ligne suivante a été supprimée car elle cause une erreur
 // app.options('*', cors()); 
