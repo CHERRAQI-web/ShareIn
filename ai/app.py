@@ -454,7 +454,7 @@ def extract_carte_grise_data(text_recto, text_verso):
 
     # --- 4. Type (sur le Verso) ---
     # CORRIGÉ: Simple et efficace.
-    type_match = re.search(r'Type\s*([\w\-]+)', text_verso)
+    type_match = re.search(r'Typè\s*([\w\-]+)', text_verso)
     if type_match:
         data['type'] = type_match.group(1).strip()
         print(f"✅ Type trouvé (Verso): {data['type']}")
