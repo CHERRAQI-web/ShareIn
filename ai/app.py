@@ -459,6 +459,7 @@ def extract_carte_grise_data(text_recto, text_verso):
         data['type'] = type_match.group(1).strip()
         print(f"✅ Type trouvé (Verso): {data['type']}")
 
+
     # --- 5. Type carburant (sur le Verso) ---
     # CORRIGÉ: Simple et efficace.
     carburant_match = re.search(r'Type carburant\s*(\w+)', text_verso, re.IGNORECASE)
@@ -639,7 +640,7 @@ def extract_info():
 
             # --- TRAITEMENT DU VERSO (inchangé) ---
             image_verso = Image.open(io.BytesIO(file_verso.read()))
-            text_verso = pytesseract.image_to_string(image_verso, lang='fra')
+            text_verso = pytesseract.image_to_string(image_verso, lang='fra+ara')
             print("--- Texte extrait du Verso (carte grise) ---")
             print(text_verso)
 
