@@ -56,31 +56,6 @@ def preprocess_image_for_ocr(image_bytes, target_area=None):
     return bw_image
 
 
-
-def extract_text_from_image_file(image_file, lang='fra', psm=6):
-    """
-    Extrait le texte d'un fichier image (Flask FileStorage) avec pré-traitement.
-    
-    :param image_file: L'objet fichier de Flask (request.files['...'])
-    :param lang: La langue pour Tesseract (ex: 'fra', 'fra+eng', 'fra+ara')
-    :param psm: Le mode de segmentation de page (psm)
-    :return: Le texte extrait en string.
-    """
-    try:
-        image_bytes = image_file.read()
-        processed_image = preprocess_image_for_ocr(image_bytes)
-        
-        # Configuration de Tesseract
-        # --oem 3 : Moteur LSTM par défaut
-        # --psm {psm} : Mode de segmentation passé en paramètre
-        custom_config = f'--oem 3 --psm {psm} -l {lang}'
-        
-        text = pytesseract.image_to_string(processed_image, config=custom_config)
-        return text
-    except Exception as e:
-        print(f"Erreur lors de l'extraction de texte depuis l'image {image_file.filename}: {e}")
-        return "" # Retourne une chaîne vide en cas d'erreur
-
 def detect_category_area(image_bytes):
     """
     Détecte la zone de la catégorie sur un permis de conduire marocain.
@@ -200,31 +175,7 @@ def extract_cin_data(text_recto, text_verso):
             data['date_of_birth'] = f'{century}{yy}-{mm}-{dd}'
             print(f"✅ Date de naissance trouvée (Verso/MRZ): {data['date_of_birth']}")
 
-    # --- 4. Adresse (inchangé, car déjà robuste) ---
-    data['address'] = None
-
-    # Recherche 1 (Priorité) : Adresse de Résidence sur le verso
-    # On cherche les mots-clés 'Adresse' ou 'Résidence' suivis de texte
-    address_match_verso = re.search(r'(Adresse|Résidence)\s*[:\n]\s*([^\n]+)', text_verso, re.IGNORECASE | re.DOTALL)
-    
-    if address_match_verso:
-        address = address_match_verso.group(2).strip()
-        address = re.sub(r'[<>\d]{5,}', '', address) # Nettoyage MRZ
-        address = re.sub(r'\s+', ' ', address).strip() 
-        
-        if len(address) > 5:
-            data['address'] = address
-            print(f"✅ Adresse de résidence trouvée (Verso): {data['address']}")
-
-    # Recherche 2 (Fallback) : Lieu de Naissance sur le recto
-    if not data.get('address'):
-        address_match_recto = re.search(r'à\s+([A-Z\s\d]+)', text_recto)
-        if address_match_recto:
-            address = re.sub(r'\s+', ' ', address_match_recto.group(1).strip())
-            data['address'] = address
-            print(f"✅ Adresse/Lieu de naissance trouvé (Recto Fallback): {data['address']}")
-        else:
-            print("❌ Adresse non trouvée sur recto ou verso.")
+  
 
 
     return data
@@ -334,10 +285,21 @@ def extract_permis_data(text_recto, text_verso, image_recto_bytes=None):
         print("❌ Catégorie non trouvée après toutes les tentatives.")
 
     # 3. Extraction de la date d'émission
-    issue_date_match_recto = re.search(r'Le\s*…\s*(\d{2}[./]\d{2}[./]\d{4})', text_recto)
+    original_pattern = r'Le\s*…\s*(\d{2}[./]\d{2}[./]\d{4})'
+    issue_date_match_recto = re.search(original_pattern, text_recto)
     if issue_date_match_recto:
-        data['issue_date'] = _format_date(issue_date_match_recto.group(1))
-        print(f"✅ Date d'émission trouvée: {data['issue_date']}")
+        print(f"✅ Succès avec le pattern original! Date trouvée: {issue_date_match_recto.group(1)}")
+    else:
+        print(f"❌ Échec avec le pattern original: '{original_pattern}'")
+
+    # Recherche 2: Un pattern plus robuste
+    robust_pattern = r'Le\s+.*?(\d{2}[./]\d{2}[./]\d{4})'
+    issue_date_match_robust = re.search(robust_pattern, text_recto, re.IGNORECASE)
+    if issue_date_match_robust:
+        print(f"✅ Succès avec le pattern robuste! Date trouvée: {issue_date_match_robust.group(1)}")
+    else:
+        print(f"❌ Échec avec le pattern robuste: '{robust_pattern}'")
+    
 
     # 4. Extraction de la date d'expiration
     expiry_date_match = re.search(r'Fin de validité.*?(\d{2}[./]\d{2}[./]\d{4})', text_verso, re.IGNORECASE | re.DOTALL)
@@ -368,56 +330,6 @@ CORRECTION_MAP = {
     '9': 'ص',  # '9' peut être confondu avec 'ص' (Sad)
     # Ajoutez d'autres corrections ici si vous en trouvez.
 }
-
-def preprocess_image_for_ocr(image_bytes):
-    """
-    Améliore une image pour une meilleure reconnaissance OCR.
-    """
-    image_pil = Image.open(io.BytesIO(image_bytes))
-    image_cv = np.array(image_pil)
-    
-    # Conversion en niveaux de gris
-    gray_image = cv2.cvtColor(image_cv, cv2.COLOR_BGR2GRAY)
-    
-    # Amélioration du contraste (très utile pour les textes estompés)
-    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
-    enhanced_image = clahe.apply(gray_image)
-    
-    # Binarisation adaptative pour gérer les ombres et les variations
-    bw_image = cv2.adaptiveThreshold(enhanced_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-    
-    return bw_image
-
-
-def extract_plate_from_text(text):
-    """
-    Tente d'extraire et de formater un numéro d'immatriculation
-    à partir d'un texte. Retourne le numéro formaté ou None.
-    """
-    plate_pattern = re.search(r'(\d{1,5})-([^\-]*)-(\d{1,5})', text)
-    if plate_pattern:
-        part1 = plate_pattern.group(1)
-        middle_raw = plate_pattern.group(2).strip()
-        part3 = plate_pattern.group(3)
-
-        print(f"   -> Pattern trouvé: Part1='{part1}', Middle='{middle_raw}', Part3='{part3}'")
-
-        if not middle_raw or middle_raw == '?':
-            print("   -> Caractère du milieu manquant ou illisible.")
-            return None
-        else:
-            corrected_middle = middle_raw
-            if corrected_middle in VALID_ARABIC_LETTERS:
-                print(f"   -> Lettre arabe valide: '{corrected_middle}'")
-            elif corrected_middle in CORRECTION_MAP:
-                corrected_middle = CORRECTION_MAP[corrected_middle]
-                print(f"   -> Correction: '{middle_raw}' -> '{corrected_middle}'")
-            else:
-                print(f"   -> Caractère non reconnu: '{corrected_middle}'")
-            
-            final_immat = f"{part1}-{corrected_middle}-{part3}"
-            return final_immat
-    return None
 
 def extract_carte_grise_data(text_recto, text_verso):
     """
