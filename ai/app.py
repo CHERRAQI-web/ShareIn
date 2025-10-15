@@ -284,22 +284,23 @@ def extract_permis_data(text_recto, text_verso, image_recto_bytes=None):
     if not category_found:
         print("❌ Catégorie non trouvée après toutes les tentatives.")
 
-    # 3. Extraction de la date d'émission
-    original_pattern = r'Le\s*…\s*(\d{2}[./]\d{2}[./]\d{4})'
-    issue_date_match_recto = re.search(original_pattern, text_recto)
-    if issue_date_match_recto:
-        print(f"✅ Succès avec le pattern original! Date trouvée: {issue_date_match_recto.group(1)}")
-    else:
-        print(f"❌ Échec avec le pattern original: '{original_pattern}'")
+        issue_date_match_recto = None
 
-    # Recherche 2: Un pattern plus robuste
-    robust_pattern = r'Le\s+.*?(\d{2}[./]\d{2}[./]\d{4})'
-    issue_date_match_robust = re.search(robust_pattern, text_recto, re.IGNORECASE)
-    if issue_date_match_robust:
-        print(f"✅ Succès avec le pattern robuste! Date trouvée: {issue_date_match_robust.group(1)}")
-    else:
-        print(f"❌ Échec avec le pattern robuste: '{robust_pattern}'")
-    
+        # Approche 1: Le pattern original
+        original_pattern = r'Le\s*…\s*(\d{2}[./]\d{2}[./]\d{4})'
+        issue_date_match_recto = re.search(original_pattern, text_recto)
+
+        # Approche 2 (Fallback): Un pattern plus robuste si le premier échoue
+        if not issue_date_match_recto:
+            robust_pattern = r'Le\s+.*?(\d{2}[./]\d{2}[./]\d{4})'
+            issue_date_match_recto = re.search(robust_pattern, text_recto, re.IGNORECASE)
+
+        # Utiliser le résultat trouvé et l'assigner à data['issue_date']
+        if issue_date_match_recto:
+            data['issue_date'] = _format_date(issue_date_match_recto.group(1))
+            print(f"✅ Date d'émission trouvée: {data['issue_date']}")
+        else:
+            print("❌ Date d'émission non trouvée après toutes les tentatives.")
 
     # 4. Extraction de la date d'expiration
     expiry_date_match = re.search(r'Fin de validité.*?(\d{2}[./]\d{2}[./]\d{4})', text_verso, re.IGNORECASE | re.DOTALL)
