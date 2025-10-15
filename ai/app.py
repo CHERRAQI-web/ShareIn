@@ -10,7 +10,7 @@ import numpy as np
 
 # --- Configuration Initiale ---
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # --- Définition des champs requis pour le calcul du pourcentage ---
 CIN_REQUIRED_FIELDS = ['first_name', 'last_name', 'cin', 'date_of_birth', 'address']
