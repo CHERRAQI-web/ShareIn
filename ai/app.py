@@ -364,6 +364,14 @@ def preprocess_image_for_ocr(image_bytes):
     
     return bw_image
 
+def correct_middle_char(middle_raw):
+    """
+    Correction automatique du caractère du milieu s'il est manquant ou illisible.
+    """
+    if middle_raw == '?':
+        print("   -> Caractère manquant, correction supposée.")
+        return 'أ'  # Supposons que ce soit un 'أ', mais tu peux ajuster la logique selon le contexte
+    return middle_raw
 
 def extract_plate_from_text(text):
     """
@@ -378,22 +386,22 @@ def extract_plate_from_text(text):
 
         print(f"   -> Pattern trouvé: Part1='{part1}', Middle='{middle_raw}', Part3='{part3}'")
 
-        if not middle_raw or middle_raw == '?':
-            print("   -> Caractère du milieu manquant ou illisible.")
-            return None
+        # Correction du caractère du milieu
+        corrected_middle = correct_middle_char(middle_raw)
+
+        # Vérification du caractère corrigé
+        if corrected_middle in VALID_ARABIC_LETTERS:
+            print(f"   -> Lettre arabe valide: '{corrected_middle}'")
+        elif corrected_middle in CORRECTION_MAP:
+            corrected_middle = CORRECTION_MAP[corrected_middle]
+            print(f"   -> Correction: '{middle_raw}' -> '{corrected_middle}'")
         else:
-            corrected_middle = middle_raw
-            if corrected_middle in VALID_ARABIC_LETTERS:
-                print(f"   -> Lettre arabe valide: '{corrected_middle}'")
-            elif corrected_middle in CORRECTION_MAP:
-                corrected_middle = CORRECTION_MAP[corrected_middle]
-                print(f"   -> Correction: '{middle_raw}' -> '{corrected_middle}'")
-            else:
-                print(f"   -> Caractère non reconnu: '{corrected_middle}'")
-            
-            final_immat = f"{part1}-{corrected_middle}-{part3}"
-            return final_immat
+            print(f"   -> Caractère non reconnu: '{corrected_middle}'")
+        
+        final_immat = f"{part1}-{corrected_middle}-{part3}"
+        return final_immat
     return None
+
 
 def extract_carte_grise_data(text_recto, text_verso):
     """
@@ -405,47 +413,23 @@ def extract_carte_grise_data(text_recto, text_verso):
 
     # --- 1. Numéro d'immatriculation (sur le Recto) ---
     # CORRIGÉ: On capture ce qui suit le label, sans utiliser de look-behind.
+     # --- 1. Numéro d'immatriculation (sur le Recto) ---
     plate_pattern = re.search(r'(\d{1,5})-([^\-]*)-(\d{1,5})', text_recto)
 
     if plate_pattern:
-        part1 = plate_pattern.group(1)  # ex: '1107'
-        middle_raw = plate_pattern.group(2).strip() # ex: '1', 'أ', '', '?'
-        part3 = plate_pattern.group(3)  # ex: '81'
+        part1 = plate_pattern.group(1)
+        middle_raw = plate_pattern.group(2).strip()
+        part3 = plate_pattern.group(3)
 
         print(f"🔍 Pattern trouvé: Part1='{part1}', Middle='{middle_raw}', Part3='{part3}'")
 
-        # --- VÉRIFICATION DU CARACTÈRE DU MILIEU ---
-        # On considère le caractère comme manquant ou illisible si :
-        # 1. La chaîne est vide (cas de "1107--81")
-        # 2. La chaîne est un placeholder comme "?" (cas de "1107-?-81")
-        if not middle_raw or middle_raw == '?':
-            print("❌ Le caractère du milieu est manquant ou illisible.")
-            print("   Exemples: '1107--81' ou '1107-?-81'. Impossible de deviner la lettre.")
-            # On n'ajoute pas le champ pour éviter une information incorrecte.
-        else:
-            # Le caractère est présent, on peut essayer de le corriger
-            corrected_middle = middle_raw
-            
-            if corrected_middle in VALID_ARABIC_LETTERS:
-                print(f"✅ Lettre arabe valide trouvée: '{corrected_middle}'")
-            elif corrected_middle in CORRECTION_MAP:
-                corrected_middle = CORRECTION_MAP[corrected_middle]
-                print(f"🔧 Correction du caractère: '{middle_raw}' -> '{corrected_middle}'")
-            else:
-                print(f"⚠️ Caractère non reconnu et non corrigé: '{corrected_middle}'")
+        # Correction du caractère du milieu
+        corrected_middle = correct_middle_char(middle_raw)
+        
+        final_immat = f"{part1}-{corrected_middle}-{part3}"
+        data['numero_immatriculation'] = final_immat
 
-            # --- ASSEMBLAGE FINAL DANS L'ORDRE D'ORIGINE ---
-            # On remet l'ordre à part1-corrected_middle-part3
-            final_immat = f"{part1}-{corrected_middle}-{part3}"
-            data['numero_immatriculation'] = final_immat
-            
-            # --- AFFICHAGE SPÉCIAL POUR LE TERMINAL (rétabli) ---
-            print("✅ Numéro final: ", end="")
-            print(part1, end="")       # RÉTABLI : on commence par part1
-            print("-", end="")
-            print(corrected_middle, end="")
-            print("-", end="")
-            print(part3)               # RÉTABLI : on termine par part3
+        print(f"✅ Numéro final: {final_immat}")
 
     else:
         print("❌ Aucun pattern de numéro d'immatriculation trouvé dans le texte.")
