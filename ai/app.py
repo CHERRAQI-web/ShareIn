@@ -175,32 +175,7 @@ def extract_cin_data(text_recto, text_verso):
             data['date_of_birth'] = f'{century}{yy}-{mm}-{dd}'
             print(f"✅ Date de naissance trouvée (Verso/MRZ): {data['date_of_birth']}")
 
-    # --- 4. Adresse (inchangé, car déjà robuste) ---
-    data['address'] = None
-
-    # Recherche 1 (Priorité) : Adresse de Résidence sur le verso
-    # On cherche les mots-clés 'Adresse' ou 'Résidence' suivis de texte
-    address_match_verso = re.search(r'(Adresse|Résidence)\s*[:\n]\s*([^\n]+)', text_verso, re.IGNORECASE | re.DOTALL)
-    
-    if address_match_verso:
-        address = address_match_verso.group(2).strip()
-        address = re.sub(r'[<>\d]{5,}', '', address) # Nettoyage MRZ
-        address = re.sub(r'\s+', ' ', address).strip() 
-        
-        if len(address) > 5:
-            data['address'] = address
-            print(f"✅ Adresse de résidence trouvée (Verso): {data['address']}")
-
-    # Recherche 2 (Fallback) : Lieu de Naissance sur le recto
-    if not data.get('address'):
-        address_match_recto = re.search(r'à\s+([A-Z\s\d]+)', text_recto)
-        if address_match_recto:
-            address = re.sub(r'\s+', ' ', address_match_recto.group(1).strip())
-            data['address'] = address
-            print(f"✅ Adresse/Lieu de naissance trouvé (Recto Fallback): {data['address']}")
-        else:
-            print("❌ Adresse non trouvée sur recto ou verso.")
-
+  
 
     return data
 

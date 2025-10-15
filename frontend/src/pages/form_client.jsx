@@ -63,7 +63,7 @@ const Client = () => {
       last_name: "",
       cin: "",
       date_of_birth: "",
-      address: "",
+     
       stats: {
         average_ai_confidence: 0,
         is_corrected_by_human: false,
