@@ -284,23 +284,22 @@ def extract_permis_data(text_recto, text_verso, image_recto_bytes=None):
     if not category_found:
         print("❌ Catégorie non trouvée après toutes les tentatives.")
 
-        issue_date_match_recto = None
+    # 3. Extraction de la date d'émission
+    original_pattern = r'Le\s*…\s*(\d{2}[./]\d{2}[./]\d{4})'
+    issue_date_match_recto = re.search(original_pattern, text_recto)
+    if issue_date_match_recto:
+        print(f"✅ Succès avec le pattern original! Date trouvée: {issue_date_match_recto.group(1)}")
+    else:
+        print(f"❌ Échec avec le pattern original: '{original_pattern}'")
 
-        # Approche 1: Le pattern original
-        original_pattern = r'Le\s*…\s*(\d{2}[./]\d{2}[./]\d{4})'
-        issue_date_match_recto = re.search(original_pattern, text_recto)
-
-        # Approche 2 (Fallback): Un pattern plus robuste si le premier échoue
-        if not issue_date_match_recto:
-            robust_pattern = r'Le\s+.*?(\d{2}[./]\d{2}[./]\d{4})'
-            issue_date_match_recto = re.search(robust_pattern, text_recto, re.IGNORECASE)
-
-        # Utiliser le résultat trouvé et l'assigner à data['issue_date']
-        if issue_date_match_recto:
-            data['issue_date'] = _format_date(issue_date_match_recto.group(1))
-            print(f"✅ Date d'émission trouvée: {data['issue_date']}")
-        else:
-            print("❌ Date d'émission non trouvée après toutes les tentatives.")
+    # Recherche 2: Un pattern plus robuste
+    robust_pattern = r'Le\s+.*?(\d{2}[./]\d{2}[./]\d{4})'
+    issue_date_match_robust = re.search(robust_pattern, text_recto, re.IGNORECASE)
+    if issue_date_match_robust:
+        print(f"✅ Succès avec le pattern robuste! Date trouvée: {issue_date_match_robust.group(1)}")
+    else:
+        print(f"❌ Échec avec le pattern robuste: '{robust_pattern}'")
+    
 
     # 4. Extraction de la date d'expiration
     expiry_date_match = re.search(r'Fin de validité.*?(\d{2}[./]\d{2}[./]\d{4})', text_verso, re.IGNORECASE | re.DOTALL)
@@ -331,6 +330,8 @@ CORRECTION_MAP = {
     '9': 'ص',  # '9' peut être confondu avec 'ص' (Sad)
     # Ajoutez d'autres corrections ici si vous en trouvez.
 }
+
+
 
 def extract_carte_grise_data(text_recto, text_verso):
     """
@@ -407,33 +408,10 @@ def extract_carte_grise_data(text_recto, text_verso):
 
     # --- 4. Type (sur le Verso) ---
     # CORRIGÉ: Simple et efficace.
-    
-    # Recherche 1: Le pattern original
-    original_pattern = r'Type\s*([\w\-]+)'
-    type_match = re.search(original_pattern, text_verso)
+    type_match = re.search(r'Type\s*([\w\-]+)', text_verso)
     if type_match:
-        print(f"✅ Succès avec le pattern original! Type trouvé: '{type_match.group(1)}'")
-    else:
-        print(f"❌ Échec avec le pattern original: '{original_pattern}'")
-
-    # Recherche 2: Un pattern plus robuste (qui accepte les espaces et les minuscules)
-    robust_pattern = r'Type\s*([\w\s\-]+)' # <-- التغيير هنا: أضفنا \s
-    type_match_robust = re.search(robust_pattern, text_verso, re.IGNORECASE) # <-- وأضفنا re.IGNORECASE
-    if type_match_robust:
-        print(f"✅ Succès avec le pattern robuste! Type trouvé: '{type_match_robust.group(1).strip()}'")
-    else:
-        print(f"❌ Échec avec le pattern robuste: '{robust_pattern}'")
-
-    print("==================================================\n")
-
-    # Utiliser le résultat du pattern robuste s'il a fonctionné
-    final_match = type_match or type_match_robust
-    if final_match:
-        data['type'] = final_match.group(1).strip()
-        print(f"✅ Type final: {data['type']}")
-    else:
-        print("❌ Type non trouvé après toutes les tentatives.")
-
+        data['type'] = type_match.group(1).strip()
+        print(f"✅ Type trouvé (Verso): {data['type']}")
 
     # --- 5. Type carburant (sur le Verso) ---
     # CORRIGÉ: Simple et efficace.
