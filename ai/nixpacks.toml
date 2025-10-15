@@ -1,0 +1,6 @@
+[phases.setup]
+aptPkgs = [
+    "tesseract-ocr",
+    "tesseract-ocr-fra",
+    "libgl1-mesa-glx"
+]
